@@ -3,12 +3,17 @@
  */
 package rps.game.backend;
 
+import java.util.Scanner;
+
 public class App {
-    public String getGreeting() {
-        return "Hello world.";
-    }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        RockPaperScissors rps = new RockPaperScissors();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Player 1, please make your choice(Rock, Paper, Scissors): ");
+        String playerOne = scanner.nextLine();
+        String playerTwo = rps.randomDecision();
+
+        System.out.println(rps.rockPaperScissors(playerOne, playerTwo));
     }
 }
