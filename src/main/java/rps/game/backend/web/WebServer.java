@@ -9,15 +9,17 @@ import rps.game.backend.gameList.GameManager;
 public class WebServer {
     private final RockPaperScissors rockPaperScissors;
     private final GameManager gameManager;
+    private final CorsHandler corsHandler;
 
-    public WebServer(RockPaperScissors rockPaperScissors, GameManager gameManager) {
+    public WebServer(RockPaperScissors rockPaperScissors, GameManager gameManager, CorsHandler corsHandler) {
         this.rockPaperScissors = rockPaperScissors;
         this.gameManager = gameManager;
+        this.corsHandler = corsHandler;
     }
     public void startServer() throws Exception{
         final ContextHandler rpsHandler = new ContextHandler("/rps");
         rpsHandler.setAllowNullPathInfo(true);
-        rpsHandler.setHandler(new RockPaperScissorsEndpoint(rockPaperScissors, gameManager));
+        rpsHandler.setHandler(new RockPaperScissorsEndpoint(rockPaperScissors, gameManager, corsHandler));
 
         ContextHandlerCollection contextHandlers = new ContextHandlerCollection(rpsHandler);
 

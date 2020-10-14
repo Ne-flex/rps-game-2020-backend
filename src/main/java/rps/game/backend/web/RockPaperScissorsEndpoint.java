@@ -14,10 +14,12 @@ import java.io.IOException;
 public class RockPaperScissorsEndpoint extends AbstractHandler {
     private final RockPaperScissors rockpaperScissors;
     private final GameManager gameManager;
+    private final CorsHandler corsHandler;
 
-    public RockPaperScissorsEndpoint(RockPaperScissors rockPaperScissors, GameManager gameManager) {
+    public RockPaperScissorsEndpoint(RockPaperScissors rockPaperScissors, GameManager gameManager, CorsHandler corsHandler) {
         this.rockpaperScissors = rockPaperScissors;
         this.gameManager = gameManager;
+        this.corsHandler = corsHandler;
     }
 
     @Override
@@ -28,6 +30,8 @@ public class RockPaperScissorsEndpoint extends AbstractHandler {
         String decisionPlayerOne = "";
         String decisionPlayerTwo = "";
         String gameWinner = "";
+
+        corsHandler.handleCors(response);
 
         if (request.getParameter("gameID") != null) {
             gameID = Integer.parseInt(request.getParameter("gameID"));
@@ -41,14 +45,17 @@ public class RockPaperScissorsEndpoint extends AbstractHandler {
 
         if (gameID != 0 && !gameManager.gameExists(gameID)) {
             gameManager.createGame(gameID);
-        }
-        if (gameID != 0 && gameManager.gameExists(gameID) && playerID != 0 && playerDecision != null) {
-            gameManager.addDecisionToPlayerInGame(gameID, playerID, playerDecision);
         } else {
-            throw new IOException("GameManager data request failed");
+            decisionPlayerOne = playerDecision;
+            decisionPlayerTwo = rockpaperScissors.randomDecision();
+            gameWinner = rockpaperScissors.rockPaperScissors(playerDecision, decisionPlayerTwo);
         }
 
-        if (gameManager.bothPlayerMadeDecisions(gameID)) {
+        if (gameID != 0 && gameManager.gameExists(gameID) && playerID != 0 && playerDecision != null) {
+            gameManager.addDecisionToPlayerInGame(gameID, playerID, playerDecision);
+        }
+
+        if (gameID != 0 && gameManager.bothPlayerMadeDecisions(gameID)) {
             String[] playerDecisions = gameManager.getGameDecisions(gameID);
             decisionPlayerOne = playerDecisions[0];
             decisionPlayerTwo = playerDecisions[1];
@@ -60,6 +67,7 @@ public class RockPaperScissorsEndpoint extends AbstractHandler {
         gameData.put("playerOne", decisionPlayerOne);
         gameData.put("playerTwo", decisionPlayerTwo);
 
+        response.setHeader("Content-Type", "text/plain; charset=utf-8");
         response.getWriter().print(gameData);
         baseRequest.setHandled(true);
     }

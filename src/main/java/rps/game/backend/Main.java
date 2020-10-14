@@ -4,6 +4,7 @@
 package rps.game.backend;
 
 import rps.game.backend.gameList.GameManager;
+import rps.game.backend.web.CorsHandler;
 import rps.game.backend.web.WebServer;
 
 import java.util.Scanner;
@@ -13,8 +14,9 @@ public class Main {
     public static void main(String[] args) throws Exception{
         RockPaperScissors rockPaperScissors = new RockPaperScissors();
         GameManager gameManager = new GameManager();
+        CorsHandler corsHandler = new CorsHandler();
 
-        new WebServer(rockPaperScissors, gameManager).startServer();
+        new WebServer(rockPaperScissors, gameManager, corsHandler).startServer();
 //        Scanner scanner = new Scanner(System.in);
 //        System.out.print("Player 1, please make your choice(Rock, Paper, Scissors): ");
 //        String playerOne = scanner.nextLine();
