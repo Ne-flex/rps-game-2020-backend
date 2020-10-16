@@ -5,7 +5,7 @@ echo -e "\n\033[35;1;4mStarting slave work...\033[0m"
 echo -e "\n\033[34;1;4mDocker build...\033[0m\n"
 sudo docker build -t sdf/rps-game-2020-backend .
 #echo -e "\n\033[34;1;4mHeroku Login...\033[0m\n"
-#heroku login
+#sudo heroku login
 echo -e "\n\033[34;1;4mHeroku Container Login...\033[0m\n"
 sudo heroku container:login
 echo -e "\n\033[34;1;4mPushing image to Heroku...\033[0m\n"

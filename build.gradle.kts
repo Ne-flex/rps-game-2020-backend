@@ -26,6 +26,7 @@ dependencies {
     implementation("org.eclipse.jetty:jetty-util-ajax:9.4.32.v20200930")
     implementation("org.eclipse.jetty:jetty-server:9.4.32.v20200930")
     implementation("org.json:json:20200518")
+    implementation("org.postgresql:postgresql:42.2.18")
 
     // Use JUnit test framework
     testImplementation("junit:junit:4.13")

@@ -3,11 +3,13 @@
  */
 package rps.game.backend;
 
+import rps.game.backend.database.DatabaseConnector;
+import rps.game.backend.database.InsertIntoDatabase;
 import rps.game.backend.gameList.GameManager;
 import rps.game.backend.web.CorsHandler;
 import rps.game.backend.web.WebServer;
 
-import java.util.Scanner;
+import java.sql.Connection;
 
 public class Main {
 
@@ -16,12 +18,17 @@ public class Main {
         GameManager gameManager = new GameManager();
         CorsHandler corsHandler = new CorsHandler();
 
-        new WebServer(rockPaperScissors, gameManager, corsHandler).startServer();
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.print("Player 1, please make your choice(Rock, Paper, Scissors): ");
-//        String playerOne = scanner.nextLine();
-//        String playerTwo = rps.randomDecision();
-//
-//        System.out.println(rps.rockPaperScissors(playerOne, playerTwo));
+        String database_url = System.getenv("DATABASE_URL");
+        String host = database_url.substring(91, 132);
+        String database = database_url.substring(138, 152);
+        String user = database_url.substring(11, 25);
+        String password = database_url.substring(26, 90);
+
+        DatabaseConnector databaseConnector = new DatabaseConnector(host, database, user, password);
+        Connection connection = databaseConnector.connect();
+
+        InsertIntoDatabase insertIntoDatabase = new InsertIntoDatabase(connection);
+
+        new WebServer(rockPaperScissors, gameManager, insertIntoDatabase, corsHandler).startServer();
     }
 }
